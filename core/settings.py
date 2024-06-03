@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     
     'prayers',
     'accounts',
+    'bible',
 ]
 
 MIDDLEWARE = [

@@ -18,7 +18,7 @@ class PrayerRequest(models.Model):
         return self.title
 
 class Prayer(models.Model):
-    prayer_request = models.ForeignKey(PrayerRequest, on_delete=models.CASCADE)
+    title = models.CharField(max_length=200, default='')
     category = models.ForeignKey(PrayerCategory, on_delete=models.SET_NULL, null=True, blank=True)
     content = models.TextField()
     date_posted = models.DateTimeField(auto_now_add=True)

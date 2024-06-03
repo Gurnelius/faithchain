@@ -1,0 +1,16 @@
+
+{% extends 'bible/base.html' %}
+
+{% block title %}
+    { Chapter.name } - Your Website
+{% endblock %}
+
+{% block content %}
+    <h1>{{ Chapter.name }}</h1>
+    <p><strong>Description:</strong> {{ Chapter.description }}</p>
+    <p><a href="{% url 'chapter_update' chapter.pk %}" class="btn btn-primary">Edit</a></p>
+    <form action="{% url 'chapter_delete' chapter.pk %}" method="post" style="display: inline;">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">Delete</button>
+    </form>
+{% endblock %}
