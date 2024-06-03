@@ -1,0 +1,16 @@
+
+{% extends 'prayers/base.html' %}
+
+{% block title %}
+    { Client.name } - Your Website
+{% endblock %}
+
+{% block content %}
+    <h1>{{ Client.name }}</h1>
+    <p><strong>Description:</strong> {{ Client.description }}</p>
+    <p><a href="{% url 'client_update' client.pk %}" class="btn btn-primary">Edit</a></p>
+    <form action="{% url 'client_delete' client.pk %}" method="post" style="display: inline;">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">Delete</button>
+    </form>
+{% endblock %}

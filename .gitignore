@@ -1,1 +1,5 @@
 venv/
+auto.py
+utils.py
+template_content.py
+__pycache__
