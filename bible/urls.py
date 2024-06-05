@@ -10,14 +10,7 @@ urlpatterns = [
     path('bible/<int:pk>/delete/', views.BibleDeleteView.as_view(), name='bible_delete'),
 ]
     
-urlpatterns += [
-    path('bible/', views.BibleListView.as_view(), name='bible_list'),
-    path('bible/<int:pk>/', views.BibleDetailView.as_view(), name='bible_detail'),
-    path('bible/create/', views.BibleCreateView.as_view(), name='bible_create'),
-    path('bible/<int:pk>/update/', views.BibleUpdateView.as_view(), name='bible_update'),
-    path('bible/<int:pk>/delete/', views.BibleDeleteView.as_view(), name='bible_delete'),
-]
-    
+
 urlpatterns += [
     path('testament/', views.TestamentListView.as_view(), name='testament_list'),
     path('testament/<int:pk>/', views.TestamentDetailView.as_view(), name='testament_detail'),
@@ -49,4 +42,12 @@ urlpatterns += [
     path('verse/<int:pk>/update/', views.VerseUpdateView.as_view(), name='verse_update'),
     path('verse/<int:pk>/delete/', views.VerseDeleteView.as_view(), name='verse_delete'),
 ]
-    
+
+# Bible Reading Links
+
+
+urlpatterns = [
+    path('read/<int:book_id>/<int:chapter_number>/', views.read_bible, name='read_bible'),
+    path('progress/', views.user_progress, name='user_progress'),
+    path('search/', views.search_bible, name='search_bible'),
+]

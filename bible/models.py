@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 class Bible(models.Model):
     id = models.BigAutoField(primary_key=True)
@@ -49,3 +50,17 @@ class Verse(models.Model):
 
     def __str__(self):
         return f'{self.chapter.book.name} {self.chapter.number}:{self.number}'
+
+# Track user reading
+
+
+class UserReadingProgress(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    book = models.ForeignKey(Book, on_delete=models.CASCADE)
+    chapter = models.ForeignKey(Chapter, on_delete=models.CASCADE)
+    verse = models.ForeignKey(Verse, on_delete=models.CASCADE)
+    date_read = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f'{self.user.username} - {self.book.name} {self.chapter.number}:{self.verse.number}'
+

@@ -2,8 +2,11 @@
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
 from . import models
+from django.shortcuts import render, get_object_or_404
+from django.contrib.auth.decorators import login_required
+from .models import Book, Chapter, Verse, UserReadingProgress
 
-    
+
 class BibleListView(ListView):
     model = models.Bible
     fields = '__all__'
@@ -193,4 +196,43 @@ class VerseDeleteView(DeleteView):
     success_url = reverse_lazy('verse_list')
     template_name = 'bible/verse_delete.html'
     success_url = reverse_lazy('verse_list')
-    
+
+
+# Views for user Bible reading progress
+
+@login_required
+def read_bible(request, book_id, chapter_number):
+    book = get_object_or_404(Book, id=book_id)
+    chapter = get_object_or_404(Chapter, book=book, number=chapter_number)
+    verses = Verse.objects.filter(chapter=chapter)
+
+    if request.method == "POST":
+        verse_id = request.POST.get('verse_id')
+        verse = get_object_or_404(Verse, id=verse_id)
+        UserReadingProgress.objects.create(user=request.user, book=book, chapter=chapter, verse=verse)
+
+    context = {
+        'book': book,
+        'chapter': chapter,
+        'verses': verses,
+    }
+    return render(request, 'bible/read_bible.html', context)
+
+@login_required
+def user_progress(request):
+    progress = UserReadingProgress.objects.filter(user=request.user).order_by('-date_read')
+    context = {
+        'progress': progress,
+    }
+    return render(request, 'bible/user_progress.html', context)
+
+def search_bible(request):
+    query = request.GET.get('q')
+    results = []
+    if query:
+        results = Verse.objects.filter(text__icontains=query)
+    context = {
+        'query': query,
+        'results': results,
+    }
+    return render(request, 'bible/search_results.html', context)
