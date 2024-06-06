@@ -1,32 +1,31 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
+
+{% block title %}
+    {{ book.name }} Chapter {{ chapter.number }}
+{% endblock %}
+
+{% block nav %}
+    {% for book in books %}
+        <a class="nav-link {% if book.id == current_book.id %}active{% endif %}" href="{% url 'read_bible' book.id 1 %}">{{ book.name }}</a>
+    {% endfor %}
+{% endblock %}
 
 {% block content %}
-<div class="container mt-5">
-    <h1 class="text-center">{{ book.name }} Chapter {{ chapter.number }}</h1>
-    <div class="mt-4">
+    <h1>{{ book.name }} Chapter {{ chapter.number }}</h1>
+    <div>
         {% for verse in verses %}
-        <div class="mb-2">
-            <span class="badge badge-secondary">{{ verse.number }}</span>
-            <span>{{ verse.text }}</span>
-        </div>
+            <div>
+                <span>{{ verse.number }}. {{ verse.text }}</span>
+            </div>
         {% endfor %}
     </div>
 
-    <div class="navigation mt-4 d-flex justify-content-between">
+    <div class="navigation">
         {% if previous_chapter %}
-            <form method="post" action="{% url 'read_bible' book.id previous_chapter.number %}">
-                {% csrf_token %}
-                <button type="submit" class="btn btn-primary">Previous Chapter</button>
-            </form>
-        {% else %}
-            <span></span>
+            <a href="{% url 'read_bible' book.id previous_chapter.number %}" class="btn btn-secondary">Previous Chapter</a>
         {% endif %}
         {% if next_chapter %}
-            <form method="post" action="{% url 'read_bible' book.id next_chapter.number %}">
-                {% csrf_token %}
-                <button type="submit" class="btn btn-primary">Next Chapter</button>
-            </form>
+            <a href="{% url 'read_bible' book.id next_chapter.number %}" class="btn btn-secondary">Next Chapter</a>
         {% endif %}
     </div>
-</div>
 {% endblock %}

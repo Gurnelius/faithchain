@@ -21,7 +21,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path("", include("prayers.urls")),
     path("accounts/", include("accounts.urls")),
-    path("bible/", include("bible.urls")),
+    path("bible/", include("bible.urls"), name="bible"),
 
     path("home", views.home, name="home"),
 

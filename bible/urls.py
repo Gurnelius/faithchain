@@ -54,8 +54,8 @@ urlpatterns += [
 
 
 urlpatterns += [
-    path('read/', views.read_bible, name='read_bible'),
-    path('read/<int:book_id>/<int:chapter_number>/', views.read_bible, name='read_bible'),
+    path('', views.read_bible, name='read_bible'),
+    path('<int:book_id>/<int:chapter_number>/', views.read_bible, name='read_bible'),
     path('progress/', views.user_progress, name='user_progress'),
     path('search/', views.search_bible, name='search_bible'),
 ]

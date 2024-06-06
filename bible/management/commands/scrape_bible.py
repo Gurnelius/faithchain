@@ -32,6 +32,7 @@ class Command(BaseCommand):
 
         # Parse the page content
         chapters = soup.find_all('div', class_='chapter')
+        book_id = 1
 
         for chapter in chapters:
             title_tag = chapter.find('h2')
@@ -59,11 +60,13 @@ class Command(BaseCommand):
 
             # Get or create the book
             book, created = Book.objects.get_or_create(
+                id = book_id,
                 testament=current_testament,
                 name=book_name,
                 abbreviation=book_name[:3]
             )
-
+            book_id += 1
+            
             # Extract verses
             for verse in chapter_parts:
                 verse_text = verse.text.strip()
@@ -85,12 +88,12 @@ class Command(BaseCommand):
                     number=chapter_number
                 )
 
-                if created:
-                    # Create the verse
-                    Verse.objects.create(
-                        chapter=chapter,
-                        number=verse_number,
-                        text=verse_content.strip()
-                    )
+                # Create the verse
+                Verse.objects.create(
+                    chapter=chapter,
+                    number=verse_number,
+                    text=verse_content.strip()
+                )
+
 
         self.stdout.write(self.style.SUCCESS('Successfully scraped and saved Bible data'))

@@ -1,10 +1,9 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Top Seller {% endblock %}</title>
+    <title>{% block title %}FaithChain{% endblock %}</title>
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <!-- jQuery -->
@@ -17,7 +16,7 @@
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo03" aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
-        <a class="navbar-brand" href="#">FaithChain</a>
+        <a class="navbar-brand" href="{% url 'home' %}">FaithChain</a>
       
         <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
           <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
@@ -30,6 +29,10 @@
             <li class="nav-item">
               <a class="nav-link" href="{% url 'prayerrequest_list' %}">Prayer Requests</a>
             </li>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'read_bible' %}">Bible</a>
+          </li>
           </ul>
           <form class="form-inline my-2 my-lg-0">
             <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
@@ -38,9 +41,21 @@
         </div>
       </nav>
 
-    <div class="container mt-4">
-        {% block content %}
-        {% endblock %}
+    <div class="container-fluid mt-4">
+        <div class="row">
+            <div class="col-md-2">
+                <!-- Vertical Navigation Menu -->
+                <nav class="nav flex-column">
+                    {% block nav %}
+                    {% endblock %}
+                </nav>
+            </div>
+            <div class="col-md-10">
+                <!-- Main Content -->
+                {% block content %}
+                {% endblock %}
+            </div>
+        </div>
     </div>
 </body>
 </html>
