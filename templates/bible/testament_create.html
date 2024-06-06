@@ -1,0 +1,26 @@
+
+{% extends 'bible/base.html' %}
+
+{% block title %}
+    Create Testament - Your Website
+{% endblock %}
+
+{% block content %}
+    <h1>Create Testament</h1>
+    <form method="post">
+        {% csrf_token %}
+        {% for field in form %}
+            <div class="form-group">
+                {{ field.label_tag }}
+                {{ field }}
+                {% if field.help_text %}
+                    <small>{ field.help_text }</small>
+                {% endif %}
+                {% for error in field.errors %}
+                    <div class="alert alert-danger">{ error }</div>
+                {% endfor %}
+            </div>
+        {% endfor %}
+        <button type="submit" class="btn btn-primary">Create</button>
+    </form>
+{% endblock %}

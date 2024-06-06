@@ -1,8 +1,10 @@
 
+from django.utils import timezone
+
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
 from . import models
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from .models import Book, Chapter, Verse, UserReadingProgress
 
@@ -236,3 +238,58 @@ def search_bible(request):
         'results': results,
     }
     return render(request, 'bible/search_results.html', context)
+
+
+
+@login_required
+def default_bible_view(request):
+    genesis = get_object_or_404(Book, id=886)
+    return redirect('read_bible', book_id=genesis.id, chapter_number=1)
+
+@login_required
+def read_bible(request, book_id=None, chapter_number=None):
+    # Check if book_id and chapter_number are provided
+    if book_id is None or chapter_number is None:
+        # Check the user's last reading progress
+        last_progress = UserReadingProgress.objects.filter(user=request.user).order_by('-start_time').first()
+        if last_progress:
+            book_id = last_progress.book.id
+            chapter_number = last_progress.chapter.number
+        else:
+            # Default to Genesis chapter 1 if no progress is found
+            genesis = Book.objects.filter(id=886).first()
+            print(genesis)
+            if genesis:
+                return redirect('read_bible', book_id=genesis.id, chapter_number=1)
+            else:
+                # Handle the case where Genesis is not found in the database
+                return render(request, 'no_content_404.html')
+
+    book = get_object_or_404(Book, id=book_id)
+    chapter = get_object_or_404(Chapter, book=book, number=chapter_number)
+    verses = Verse.objects.filter(chapter=chapter)
+    
+    # Navigation logic
+    previous_chapter = Chapter.objects.filter(book=book, number=chapter_number-1).first()
+    next_chapter = Chapter.objects.filter(book=book, number=chapter_number+1).first()
+
+    # Handle user reading progress
+    if request.method == "POST":
+        # Retrieve and update the current reading progress if it exists
+        progress = UserReadingProgress.objects.filter(user=request.user, book=book).last()
+        if progress and progress.chapter == chapter:
+            time_spent = timezone.now() - progress.start_time
+            progress.time_spent = time_spent
+            progress.save()
+        else:
+            # Start tracking a new chapter reading session
+            UserReadingProgress.objects.create(user=request.user, book=book, chapter=chapter)
+
+    context = {
+        'book': book,
+        'chapter': chapter,
+        'verses': verses,
+        'previous_chapter': previous_chapter,
+        'next_chapter': next_chapter,
+    }
+    return render(request, 'bible/read_bible.html', context)

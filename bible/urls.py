@@ -46,7 +46,15 @@ urlpatterns += [
 # Bible Reading Links
 
 
-urlpatterns = [
+# urlpatterns += [
+#     path('read/<int:book_id>/<int:chapter_number>/', views.read_bible, name='read_bible'),
+#     path('progress/', views.user_progress, name='user_progress'),
+#     path('search/', views.search_bible, name='search_bible'),
+# ]
+
+
+urlpatterns += [
+    path('read/', views.read_bible, name='read_bible'),
     path('read/<int:book_id>/<int:chapter_number>/', views.read_bible, name='read_bible'),
     path('progress/', views.user_progress, name='user_progress'),
     path('search/', views.search_bible, name='search_bible'),

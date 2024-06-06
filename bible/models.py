@@ -32,7 +32,7 @@ class Book(models.Model):
     abbreviation = models.CharField(max_length=10)
 
     def __str__(self):
-        return self.name
+        return f"{self.id}: {self.name}"
 
 class Chapter(models.Model):
     id = models.BigAutoField(primary_key=True)
@@ -53,14 +53,12 @@ class Verse(models.Model):
 
 # Track user reading
 
-
 class UserReadingProgress(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     book = models.ForeignKey(Book, on_delete=models.CASCADE)
     chapter = models.ForeignKey(Chapter, on_delete=models.CASCADE)
-    verse = models.ForeignKey(Verse, on_delete=models.CASCADE)
-    date_read = models.DateTimeField(auto_now_add=True)
+    start_time = models.DateTimeField(auto_now_add=True)
+    time_spent = models.DurationField(null=True, blank=True)  # New field to track time spent reading
 
     def __str__(self):
-        return f'{self.user.username} - {self.book.name} {self.chapter.number}:{self.verse.number}'
-
+        return f'{self.user.username} - {self.book.name} Chapter {self.chapter.number}'

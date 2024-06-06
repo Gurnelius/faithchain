@@ -1,0 +1,16 @@
+
+{% extends 'bible/base.html' %}
+
+{% block title %}
+    { Bible.name } - Your Website
+{% endblock %}
+
+{% block content %}
+    <h1>{{ Bible.name }}</h1>
+    <p><strong>Description:</strong> {{ Bible.description }}</p>
+    <p><a href="{% url 'bible_update' bible.pk %}" class="btn btn-primary">Edit</a></p>
+    <form action="{% url 'bible_delete' bible.pk %}" method="post" style="display: inline;">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">Delete</button>
+    </form>
+{% endblock %}

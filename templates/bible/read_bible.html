@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="text-center">{{ book.name }} Chapter {{ chapter.number }}</h1>
+    <div class="mt-4">
+        {% for verse in verses %}
+        <div class="mb-2">
+            <span class="badge badge-secondary">{{ verse.number }}</span>
+            <span>{{ verse.text }}</span>
+        </div>
+        {% endfor %}
+    </div>
+
+    <div class="navigation mt-4 d-flex justify-content-between">
+        {% if previous_chapter %}
+            <form method="post" action="{% url 'read_bible' book.id previous_chapter.number %}">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-primary">Previous Chapter</button>
+            </form>
+        {% else %}
+            <span></span>
+        {% endif %}
+        {% if next_chapter %}
+            <form method="post" action="{% url 'read_bible' book.id next_chapter.number %}">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-primary">Next Chapter</button>
+            </form>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
