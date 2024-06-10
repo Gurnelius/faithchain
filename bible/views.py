@@ -204,6 +204,20 @@ class VerseDeleteView(DeleteView):
 
 @login_required
 def read_bible(request, book_id, chapter_number):
+    """
+    Reads a specific chapter of a book in the Bible.
+
+    Args:
+        request (HttpRequest): The HTTP request object.
+        book_id (int): The ID of the book.
+        chapter_number (int): The number of the chapter.
+
+    Returns:
+        HttpResponse: The rendered response containing the book, chapter, and verses.
+
+    Raises:
+        Http404: If the book or chapter is not found.
+    """
     book = get_object_or_404(Book, id=book_id)
     chapter = get_object_or_404(Chapter, book=book, number=chapter_number)
     verses = Verse.objects.filter(chapter=chapter)
@@ -220,8 +234,23 @@ def read_bible(request, book_id, chapter_number):
     }
     return render(request, 'bible/read_bible.html', context)
 
+
 @login_required
 def user_progress(request):
+    """
+    Renders the user's progress in reading the Bible.
+
+    This function retrieves the user's reading progress from the database,
+    filtering by the authenticated user and ordering the results by date
+    in descending order. The progress is then passed to the template
+    'bible/user_progress.html' for rendering.
+
+    Parameters:
+        request (HttpRequest): The HTTP request object.
+
+    Returns:
+        HttpResponse: The rendered response containing the user's progress.
+    """
     progress = UserReadingProgress.objects.filter(user=request.user).order_by('-date_read')
     context = {
         'progress': progress,
@@ -243,6 +272,20 @@ def search_bible(request):
 
 @login_required
 def default_bible_view(request):
+    """
+    Redirects the user to the 'read_bible' view with the default book and chapter.
+
+    Parameters:
+        request (HttpRequest): The HTTP request object.
+
+    Returns:
+        HttpResponseRedirect: A redirect response to the 'read_bible' view.
+
+    Raises:
+        Http404: If the default book is not found.
+
+    """
+
     genesis = get_object_or_404(Book, id=886)
     return redirect('read_bible', book_id=genesis.id, chapter_number=1)
 

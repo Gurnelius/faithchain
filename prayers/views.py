@@ -5,6 +5,7 @@ from . import models
 
     
 class PrayerCategoryListView(ListView):
+    
     model = models.PrayerCategory
     fields = '__all__'
     template_name = 'prayers/prayercategory_list.html'
